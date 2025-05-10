@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  db:
+    image: mongo:latest
+    container_name: recipe_db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: mysecretpassword
+    ports:
+      - "27017:27017"
+
+  backend:
+    build: ./backend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      - DOCKER=true
+    develop:
+      watch:
+        - action: sync
+          path: ./backend
+          target: /app
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: package.json
+  
+  frontend:
+    build: ./front-end
+    ports:
+      - "5173:5173"
+    depends_on:
+      - db
+      - backend
+    develop:
+      watch:
+        - action: sync
+          path: ./front-end
+          target: /app
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: package.json
