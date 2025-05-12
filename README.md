@@ -7,29 +7,36 @@ A web app for scraping and saving recipes in the web.
   <img src="https://github.com/user-attachments/assets/376179d1-2072-4c2a-a60d-dabaf9de7b92" width="45%">
 </p> -->
 
-## Motivation
+## Motivation / Goal(s)
 
 - Learn about authentication
 - Learn about authorization
 - Learn about JWT
 - Learn about real-time application
+- Learn about Prisma
 
-<!-- ## Features
+## Features
 
-- Upload a recipe from a url
-- View saved recipe(s)
-- View collection(s) and its recipe(s)
-- Filter a list of recipes and collections
-- Get, create, update, delete a collection
-- Batch add, batch delete recipes
-
--->
+- (TODO) Sign up / login
+- (TODO) JWT or session-based auth with refresh tokens
+- (TODO) Store token in cookie
+- (TODO) Create / rename / delete boards
+- (TODO) List all boards owned by the user
+- (TODO) Share boards
+- (TODO) Add / reorder lists inside a board
+- (TODO) Rename / delete lists
+- (TODO) Create / move / delete cards inside lists
+- (TODO) Drag and drop to reorder (just update position)
+- (TODO) Assign due date or simple description
 
 ## What I've learned
 
 - authentication
 - authorization
 - JWT
+- Prisma
+- Apollo Client
+- GraphQL Subscriptions
 
 ## What I've used
 
@@ -38,11 +45,9 @@ A web app for scraping and saving recipes in the web.
 - React
 - TypeScript
 - NestJS
-<!-- - react-hook-form -->
-- tanstack/react-query
-  <!-- - MongoDB -->
-  <!-- - Mongoose -->
-  <!-- - Jotai -->
+- Prisma
+- Apollo Client
+- GraphQL
 - Jest
 - testcontainers
 

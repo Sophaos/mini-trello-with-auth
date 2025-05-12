@@ -2,13 +2,12 @@ version: '3.8'
 
 services:
   db:
-    image: mongo:latest
-    container_name: recipe_db
+    image: postgres
+    container_name: my_postgres_container_trello
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: mysecretpassword
+      POSTGRES_PASSWORD: mysecretpassword
     ports:
-      - "27017:27017"
+      - "5432:5432"
 
   backend:
     build: ./backend
@@ -16,8 +15,6 @@ services:
       - "3000:3000"
     depends_on:
       - db
-    environment:
-      - DOCKER=true
     develop:
       watch:
         - action: sync
@@ -29,7 +26,7 @@ services:
           path: package.json
   
   frontend:
-    build: ./front-end
+    build: ./frontend
     ports:
       - "5173:5173"
     depends_on:
@@ -38,7 +35,7 @@ services:
     develop:
       watch:
         - action: sync
-          path: ./front-end
+          path: ./frontend
           target: /app
           ignore:
             - node_modules/
