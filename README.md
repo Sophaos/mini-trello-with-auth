@@ -1,6 +1,6 @@
-# Recipe Scraper
+# Mini Trello App With Auth
 
-A web app for scraping and saving recipes in the web.
+A Trello Web app clone with auth
 
 <!-- <p align="center">
   <img src="https://github.com/user-attachments/assets/6f6d2b4f-dfd6-442c-af8b-01622200ecc3" width="45%">
@@ -39,8 +39,6 @@ A web app for scraping and saving recipes in the web.
 - GraphQL Subscriptions
 
 ## What I've used
-
-<!-- - GraphQL (apollo) -->
 
 - React
 - TypeScript
