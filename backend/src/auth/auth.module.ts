@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-// import { AuthService } from './auth.service';
 import { UsersModule } from '../users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './constants';
+import { AuthService } from './auth.service';
 // import { AuthGuard } from './auth.guard';
 // import { APP_GUARD } from '@nestjs/core';
 
@@ -16,12 +16,12 @@ import { jwtConstants } from './constants';
     }),
   ],
   providers: [
-    // AuthService,
+    AuthService,
     // {
     //   provide: APP_GUARD,
     //   useClass: AuthGuard,
     // },
   ],
-  // exports: [AuthService],
+  exports: [AuthService],
 })
 export class AuthModule {}
