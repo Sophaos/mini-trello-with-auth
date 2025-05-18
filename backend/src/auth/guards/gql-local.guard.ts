@@ -11,8 +11,7 @@ export class GqlLocalAuthGuard extends AuthGuard('local') {
     const gqlExecutionContext = GqlExecutionContext.create(context);
     const gqlContext = gqlExecutionContext.getContext();
     const gqlArgs = gqlExecutionContext.getArgs();
-
-    gqlContext.req.body = { ...gqlContext.req.body, ...gqlArgs };
+    gqlContext.req.body = gqlArgs.data;
     return gqlContext.req;
   }
 }
