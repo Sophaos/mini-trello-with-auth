@@ -3,7 +3,8 @@ import { UsersModule } from '../users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './constants';
 import { AuthService } from './auth.service';
-// import { AuthGuard } from './auth.guard';
+import { JwtStrategy } from './strategies/jwt.strategy';
+import { LocalStrategy } from './strategies/local.strategy';
 // import { APP_GUARD } from '@nestjs/core';
 
 @Module({
@@ -17,6 +18,8 @@ import { AuthService } from './auth.service';
   ],
   providers: [
     AuthService,
+    LocalStrategy,
+    JwtStrategy,
     // {
     //   provide: APP_GUARD,
     //   useClass: AuthGuard,
