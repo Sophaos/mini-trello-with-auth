@@ -1,12 +1,13 @@
 // src/auth/auth.resolver.ts
 import { Resolver, Mutation, Args, Query, Context } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
-import { User } from '../users/user';
 import { UseGuards } from '@nestjs/common';
 import { LoginInput, SignUpInput } from './entities/auth.input';
 import { GqlLocalAuthGuard } from './guards/gql-local.guard';
+import { UserAuthType } from 'src/types/user-auth.type';
+import { GqlContext } from './entities/gql-context';
 
-@Resolver(() => User)
+@Resolver(() => UserAuthType)
 export class AuthResolver {
   constructor(private authService: AuthService) {}
 
@@ -15,18 +16,21 @@ export class AuthResolver {
     return 'API is running!';
   }
 
-  @Mutation(() => User)
+  @Mutation(() => UserAuthType)
   async signUp(@Args('data') data: SignUpInput) {
     return this.authService.signUp(data);
   }
 
   @UseGuards(GqlLocalAuthGuard)
-  @Mutation(() => String)
-  async login(@Args('data') _: LoginInput, @Context() context) {
-    const token = await this.authService.login({
-      id: context.id,
-      email: context.email,
+  @Mutation(() => UserAuthType)
+  async login(@Args('data') _: LoginInput, @Context() context: GqlContext) {
+    const tokenData = await this.authService.login({
+      id: context.req.user.id,
+      email: context.req.user.email,
     });
-    return token.access_token;
+    return {
+      user: context.req.user,
+      ...tokenData,
+    };
   }
 }
