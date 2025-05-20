@@ -5,6 +5,12 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { AuthResolver } from './auth/auth.resolver';
 import { UserResolver } from './users/users.resolver';
+import { BoardsResolver } from './boards/boards.resolver';
+import { ListsResolver } from './lists/lists.resolver';
+import { CardsResolver } from './cards/cards.resolver';
+import { BoardsService } from './boards/boards.service';
+import { CardsService } from './cards/cards.service';
+import { ListsService } from './lists/lists.service';
 
 @Module({
   imports: [
@@ -16,6 +22,6 @@ import { UserResolver } from './users/users.resolver';
       sortSchema: true,
     }),
   ],
-  providers: [AuthResolver, UserResolver],
+  providers: [AuthResolver, UserResolver, BoardsResolver, ListsResolver, CardsResolver, BoardsService, CardsService, ListsService],
 })
 export class AppModule {}

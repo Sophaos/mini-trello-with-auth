@@ -9,13 +9,67 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "postgresql" // or your DB of choice
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
+  id               Int           @id @default(autoincrement())
+  email            String        @unique
+  password         String
+  name             String
+  boards           Board[]       @relation("OwnerBoards")
+  boardMemberships BoardMember[]
+  assignedCards    Card[]
+}
+
+model Board {
+  id        Int           @id @default(autoincrement())
+  title     String
+  ownerId   Int
+  owner     User          @relation("OwnerBoards", fields: [ownerId], references: [id])
+  members   BoardMember[]
+  lists     List[]
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+}
+
+model BoardMember {
+  id       Int       @id @default(autoincrement())
+  user     User      @relation(fields: [userId], references: [id])
+  userId   Int
+  board    Board     @relation(fields: [boardId], references: [id])
+  boardId  Int
+  role     BoardRole @default(MEMBER)
+  joinedAt DateTime  @default(now())
+
+  @@unique([userId, boardId])
+}
+
+enum BoardRole {
+  MEMBER
+  OWNER
+  GUEST
+}
+
+model List {
+  id       Int    @id @default(autoincrement())
+  title    String
+  position Int
+  board    Board  @relation(fields: [boardId], references: [id])
+  boardId  Int
+  cards    Card[]
+}
+
+model Card {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String?
+  position    Int
+  list        List      @relation(fields: [listId], references: [id])
+  listId      Int
+  assignees   User[]
+  dueDate     DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
