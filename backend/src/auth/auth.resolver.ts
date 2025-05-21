@@ -18,7 +18,7 @@ export class AuthResolver {
 
   @Mutation(() => UserAuthType)
   async signUp(@Args('data') data: SignUpInput) {
-    return this.authService.signUp(data);
+    return await this.authService.signUp(data);
   }
 
   @UseGuards(GqlLocalAuthGuard)

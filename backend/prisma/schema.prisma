@@ -62,14 +62,13 @@ model List {
 }
 
 model Card {
-  id          Int       @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   title       String
   description String?
   position    Int
-  list        List      @relation(fields: [listId], references: [id])
+  list        List     @relation(fields: [listId], references: [id])
   listId      Int
   assignees   User[]
-  dueDate     DateTime?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
