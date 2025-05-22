@@ -11,6 +11,7 @@ import { CardsResolver } from './cards/cards.resolver';
 import { BoardsService } from './boards/boards.service';
 import { CardsService } from './cards/cards.service';
 import { ListsService } from './lists/lists.service';
+import { BoardMemberResolver } from './board-member/board-member.resolver';
 
 @Module({
   imports: [
@@ -22,6 +23,6 @@ import { ListsService } from './lists/lists.service';
       sortSchema: true,
     }),
   ],
-  providers: [AuthResolver, UserResolver, BoardsResolver, ListsResolver, CardsResolver, BoardsService, CardsService, ListsService],
+  providers: [AuthResolver, UserResolver, BoardsResolver, ListsResolver, CardsResolver, BoardsService, CardsService, ListsService, BoardMemberResolver],
 })
 export class AppModule {}

@@ -1,27 +1,29 @@
-import { Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { ListsService } from './lists.service';
+import { ListType } from 'src/types/list.type';
+import { CreateListInput, UpdateListInput } from './lists.input';
 
-@Resolver()
+@Resolver(() => ListType)
 export class ListsResolver {
-  constructor(private listService: ListsService) {}
+  constructor(private readonly listsService: ListsService) {}
 
-  @Query(() => String)
-  findMany(): string {
-    return 'API is running!';
+  @Query(() => [ListType])
+  async getListsByBoard(@Args('boardId', { type: () => Int }) boardId: number) {
+    return await this.listsService.findByBoardId(boardId);
   }
 
-  @Mutation(() => String)
-  async create(@Args('data') data: any) {
-    return this.listService.signUp(data);
+  @Mutation(() => ListType)
+  async createList(@Args('data') data: CreateListInput) {
+    return await this.listsService.create(data);
   }
 
-  @Mutation(() => String)
-  async update(@Args('data') data: any) {
-    return this.listService.signUp(data);
+  @Mutation(() => ListType)
+  async updateList(@Args('data') data: UpdateListInput) {
+    return await this.listsService.update(data);
   }
 
-  @Mutation(() => String)
-  async delete(@Args('data') data: any) {
-    return this.listService.signUp(data);
+  @Mutation(() => Boolean)
+  async deleteList(@Args('id', { type: () => Int }) id: number) {
+    return await this.listsService.delete(id);
   }
 }
