@@ -20,7 +20,7 @@ model User {
   name             String
   boards           Board[]       @relation("OwnerBoards")
   boardMemberships BoardMember[]
-  // assignedCards    Card[]
+  assignedCards    Card[]
 }
 
 model Board {
@@ -68,7 +68,7 @@ model Card {
   position    Int
   list        List     @relation(fields: [listId], references: [id])
   listId      Int
-  // assignees   User[]
+  assignees   User[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
