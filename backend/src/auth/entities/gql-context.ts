@@ -5,7 +5,7 @@ export interface GqlContext {
     user: {
       id: number;
       email: string;
-      // add more fields as needed
+      name: string;
     };
   };
 }

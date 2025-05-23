@@ -12,6 +12,10 @@ import { BoardsService } from './boards/boards.service';
 import { CardsService } from './cards/cards.service';
 import { ListsService } from './lists/lists.service';
 import { BoardMemberResolver } from './board-member/board-member.resolver';
+import { BoardsModule } from './boards/boards.module';
+import { ListsModule } from './lists/lists.module';
+import { CardsModule } from './cards/cards.module';
+import { BoardMemberModule } from './board-member/board-member.module';
 
 @Module({
   imports: [
@@ -22,7 +26,18 @@ import { BoardMemberResolver } from './board-member/board-member.resolver';
       autoSchemaFile: true,
       sortSchema: true,
     }),
+    BoardsModule,
+    ListsModule,
+    CardsModule,
+    BoardMemberModule,
   ],
-  providers: [AuthResolver, UserResolver, BoardsResolver, ListsResolver, CardsResolver, BoardsService, CardsService, ListsService, BoardMemberResolver],
+  providers: [
+    AuthResolver,
+    UserResolver,
+    BoardsResolver,
+    ListsResolver,
+    CardsResolver,
+    BoardMemberResolver,
+  ],
 })
 export class AppModule {}

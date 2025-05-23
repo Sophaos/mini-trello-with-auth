@@ -12,6 +12,11 @@ export class SignUpInput {
   @IsString()
   @MinLength(3)
   password: string;
+
+  @Field()
+  @IsString()
+  @MinLength(3)
+  name: string;
 }
 
 @InputType()
@@ -25,4 +30,9 @@ export class LoginInput {
   @IsString()
   @MinLength(3)
   password: string;
+
+  @Field()
+  @IsString()
+  @MinLength(3)
+  name: string;
 }

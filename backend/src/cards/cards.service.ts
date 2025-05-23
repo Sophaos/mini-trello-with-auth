@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateCardInput } from './dto/create-card.input';
-import { UpdateCardInput } from './dto/update-card.input';
+import { CreateCardInput, UpdateCardInput } from './cards.input';
 
 @Injectable()
 export class CardsService {
@@ -27,7 +26,6 @@ export class CardsService {
         list: {
           connect: { id: data.listId },
         },
-        dueDate: data.dueDate ? new Date(data.dueDate) : undefined,
         assignees: data.assigneeIds?.length
           ? {
               connect: data.assigneeIds.map((id) => ({ id })),
@@ -50,7 +48,6 @@ export class CardsService {
         title: data.title ?? card.title,
         description: data.description ?? card.description,
         position: data.position ?? card.position,
-        dueDate: data.dueDate ? new Date(data.dueDate) : card.dueDate,
         assignees: data.assigneeIds
           ? {
               set: data.assigneeIds.map((id) => ({ id })),
