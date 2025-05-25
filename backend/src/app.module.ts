@@ -8,14 +8,13 @@ import { UserResolver } from './users/users.resolver';
 import { BoardsResolver } from './boards/boards.resolver';
 import { ListsResolver } from './lists/lists.resolver';
 import { CardsResolver } from './cards/cards.resolver';
-import { BoardsService } from './boards/boards.service';
-import { CardsService } from './cards/cards.service';
-import { ListsService } from './lists/lists.service';
 import { BoardMemberResolver } from './board-member/board-member.resolver';
 import { BoardsModule } from './boards/boards.module';
 import { ListsModule } from './lists/lists.module';
 import { CardsModule } from './cards/cards.module';
 import { BoardMemberModule } from './board-member/board-member.module';
+import { APP_GUARD } from '@nestjs/core';
+import { GqlJwtGuard } from './auth/guards/gql-jwt.guard';
 
 @Module({
   imports: [
@@ -38,6 +37,10 @@ import { BoardMemberModule } from './board-member/board-member.module';
     ListsResolver,
     CardsResolver,
     BoardMemberResolver,
+    {
+      provide: APP_GUARD,
+      useClass: GqlJwtGuard,
+    },
   ],
 })
 export class AppModule {}
