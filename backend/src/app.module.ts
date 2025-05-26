@@ -15,6 +15,7 @@ import { CardsModule } from './cards/cards.module';
 import { BoardMemberModule } from './board-member/board-member.module';
 import { APP_GUARD } from '@nestjs/core';
 import { GqlJwtGuard } from './auth/guards/gql-jwt.guard';
+import { PrismaService } from './prisma/prisma.service';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { GqlJwtGuard } from './auth/guards/gql-jwt.guard';
     BoardMemberModule,
   ],
   providers: [
+    PrismaService,
     AuthResolver,
     UserResolver,
     BoardsResolver,
