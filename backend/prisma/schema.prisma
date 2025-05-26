@@ -32,7 +32,7 @@ model BoardMember {
   id       Int       @id @default(autoincrement())
   user     User      @relation(fields: [userId], references: [id])
   userId   Int
-  board    Board     @relation(fields: [boardId], references: [id])
+  board    Board     @relation(fields: [boardId], references: [id], onDelete: Cascade)
   boardId  Int
   role     BoardRole @default(MEMBER)
   joinedAt DateTime  @default(now())

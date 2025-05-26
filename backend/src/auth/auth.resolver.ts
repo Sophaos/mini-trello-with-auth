@@ -7,6 +7,7 @@ import { GqlLocalAuthGuard } from './guards/gql-local.guard';
 import { UserAuthType } from 'src/types/user-auth.type';
 import { GqlContext } from './entities/gql-context';
 import { Public } from './decorators/public.decorator';
+import { UserType } from 'src/types/user.type';
 
 @Resolver(() => UserAuthType)
 export class AuthResolver {
@@ -19,7 +20,7 @@ export class AuthResolver {
   }
 
   @Public()
-  @Mutation(() => UserAuthType)
+  @Mutation(() => UserType)
   async signUp(@Args('data') data: SignUpInput) {
     return await this.authService.signUp(data);
   }

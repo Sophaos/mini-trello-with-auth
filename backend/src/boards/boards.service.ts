@@ -1,20 +1,20 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateBoardInput, UpdateBoardInput } from './boards.input';
+import { UpdateBoardInput } from './boards.input';
 
 @Injectable()
 export class BoardsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll() {
-    return this.prisma.board.findMany({
-      include: {
-        owner: true,
-        members: true,
-        lists: true,
-      },
-    });
-  }
+  // async findAll() {
+  //   return this.prisma.board.findMany({
+  //     include: {
+  //       owner: true,
+  //       members: true,
+  //       lists: true,
+  //     },
+  //   });
+  // }
 
   async findByBoardId(boardId: number) {
     const board = await this.prisma.board.findUnique({
@@ -37,31 +37,40 @@ export class BoardsService {
     return board;
   }
 
-  async create(data: CreateBoardInput) {
+  async create(title: string, ownerId: number) {
     return this.prisma.board.create({
       data: {
-        title: data.title,
+        title,
         owner: {
-          connect: { id: data.ownerId },
+          connect: { id: ownerId },
+        },
+        members: {
+          create: {
+            user: {
+              connect: { id: ownerId },
+            },
+            role: 'OWNER',
+          },
         },
       },
       include: {
         owner: true,
+        members: true,
       },
     });
   }
 
-  async update(data: UpdateBoardInput) {
+  async update(id: number, data: UpdateBoardInput) {
     const board = await this.prisma.board.findUnique({
-      where: { id: data.id },
+      where: { id },
     });
 
     if (!board) {
-      throw new NotFoundException(`Board with ID ${data.id} not found`);
+      throw new NotFoundException(`Board with ID ${id} not found`);
     }
 
     return this.prisma.board.update({
-      where: { id: data.id },
+      where: { id },
       data: {
         title: data.title ?? board.title,
       },
@@ -75,7 +84,6 @@ export class BoardsService {
 
   async delete(id: number) {
     const board = await this.prisma.board.findUnique({ where: { id } });
-
     if (!board) {
       throw new NotFoundException(`Board with ID ${id} not found`);
     }
