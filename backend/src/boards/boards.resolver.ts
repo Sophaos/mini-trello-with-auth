@@ -2,8 +2,10 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { BoardsService } from './boards.service';
 import { BoardType } from 'src/types/board.type';
 import {
+  AddBoardMemberInput,
   BoardIdInput,
   CreateBoardInput,
+  TransferOwnershipInput,
   UpdateBoardInput,
 } from './boards.input';
 import { BoardRoles } from 'src/auth/decorators/roles.decorator';
@@ -52,5 +54,22 @@ export class BoardsResolver {
     return true;
   }
 
-  // TODO: add transfer ownership
+  @BoardRoles(BoardRole.OWNER, BoardRole.MEMBER)
+  @Mutation(() => BoardType)
+  async addBoardMember(@Args('data') data: AddBoardMemberInput) {
+    return await this.boardsService.addMember(
+      data.boardId,
+      data.userId,
+      data.role,
+    );
+  }
+
+  @BoardRoles(BoardRole.OWNER)
+  @Mutation(() => BoardType)
+  async transferOwnership(@Args('data') data: TransferOwnershipInput) {
+    return await this.boardsService.transferOwnership(
+      data.boardId,
+      data.newOwnerId,
+    );
+  }
 }

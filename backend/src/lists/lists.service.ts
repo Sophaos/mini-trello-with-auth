@@ -23,10 +23,17 @@ export class ListsService {
   }
 
   async create(data: CreateListInput) {
+    const lastList = await this.prisma.list.findFirst({
+      where: { boardId: data.boardId },
+      orderBy: { position: 'desc' },
+    });
+
+    const newPosition = lastList ? lastList.position + 1 : 0;
+
     return this.prisma.list.create({
       data: {
         title: data.title,
-        position: data.position,
+        position: newPosition,
         board: {
           connect: { id: data.boardId },
         },
