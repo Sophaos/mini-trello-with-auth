@@ -21,7 +21,7 @@ model Board {
   id        Int           @id @default(autoincrement())
   title     String
   ownerId   Int
-  owner     User          @relation("OwnerBoards", fields: [ownerId], references: [id])
+  owner     User          @relation("OwnerBoards", fields: [ownerId], references: [id], onDelete: Cascade)
   members   BoardMember[]
   lists     List[]
   createdAt DateTime      @default(now())
