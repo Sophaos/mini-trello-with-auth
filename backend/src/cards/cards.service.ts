@@ -1,12 +1,18 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateCardInput, UpdateCardInput } from './cards.input';
+import {
+  CreateCardInput,
+  DeleteCardInput,
+  GetCardsInput,
+  UpdateCardInput,
+} from './cards.input';
 
 @Injectable()
 export class CardsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findByListId(listId: number) {
+  async findByListId(data: GetCardsInput) {
+    const { listId } = data;
     return this.prisma.card.findMany({
       where: { listId },
       orderBy: { position: 'asc' },
@@ -60,7 +66,8 @@ export class CardsService {
     });
   }
 
-  async delete(id: number) {
+  async delete(data: DeleteCardInput) {
+    const { id } = data;
     const card = await this.prisma.card.findUnique({ where: { id } });
     if (!card) throw new NotFoundException(`Card with ID ${id} not found`);
 

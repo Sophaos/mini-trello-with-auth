@@ -1,12 +1,18 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateListInput, UpdateListInput } from './lists.input';
+import {
+  CreateListInput,
+  DeleteListInput,
+  UpdateListInput,
+} from './lists.input';
+import { BoardIdInput } from 'src/boards/boards.input';
 
 @Injectable()
 export class ListsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findByBoardId(boardId: number) {
+  async findByBoardId(data: BoardIdInput) {
+    const { boardId } = data;
     return this.prisma.list.findMany({
       where: { boardId },
       orderBy: { position: 'asc' },
@@ -47,7 +53,8 @@ export class ListsService {
     });
   }
 
-  async delete(id: number) {
+  async delete(data: DeleteListInput) {
+    const { id } = data;
     const list = await this.prisma.list.findUnique({ where: { id } });
     if (!list) throw new NotFoundException(`List with ID ${id} not found`);
 

@@ -1,7 +1,11 @@
-import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { BoardsService } from './boards.service';
 import { BoardType } from 'src/types/board.type';
-import { CreateBoardInput, UpdateBoardInput } from './boards.input';
+import {
+  BoardIdInput,
+  CreateBoardInput,
+  UpdateBoardInput,
+} from './boards.input';
 import { BoardRoles } from 'src/auth/decorators/roles.decorator';
 import { BoardRole } from '@prisma/client';
 import { UseGuards } from '@nestjs/common';
@@ -31,23 +35,20 @@ export class BoardsResolver {
 
   @BoardRoles(BoardRole.OWNER, BoardRole.MEMBER, BoardRole.GUEST)
   @Query(() => BoardType, { name: 'board' })
-  async getBoardById(@Args('boardId', { type: () => Int }) id: number) {
-    return await this.boardsService.findByBoardId(id);
+  async getBoardById(@Args('data') data: BoardIdInput) {
+    return await this.boardsService.findByBoardId(data);
   }
 
   @BoardRoles(BoardRole.OWNER)
   @Mutation(() => BoardType)
-  async updateBoard(
-    @Args('boardId', { type: () => Int }) id: number,
-    @Args('data') data: UpdateBoardInput,
-  ) {
-    return await this.boardsService.update(id, data);
+  async updateBoard(@Args('data') data: UpdateBoardInput) {
+    return await this.boardsService.update(data);
   }
 
   @BoardRoles(BoardRole.OWNER, BoardRole.MEMBER)
   @Mutation(() => Boolean)
-  async deleteBoard(@Args('boardId', { type: () => Int }) id: number) {
-    await this.boardsService.delete(id);
+  async deleteBoard(@Args('data') data: BoardIdInput) {
+    await this.boardsService.delete(data);
     return true;
   }
 

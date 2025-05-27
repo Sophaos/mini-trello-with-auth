@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { UpdateBoardInput } from './boards.input';
+import { BoardIdInput, UpdateBoardInput } from './boards.input';
 
 @Injectable()
 export class BoardsService {
@@ -16,9 +16,10 @@ export class BoardsService {
   //   });
   // }
 
-  async findByBoardId(boardId: number) {
+  async findByBoardId(data: BoardIdInput) {
+    const { boardId: id } = data;
     const board = await this.prisma.board.findUnique({
-      where: { id: boardId },
+      where: { id },
       include: {
         owner: true,
         members: true,
@@ -31,7 +32,7 @@ export class BoardsService {
     });
 
     if (!board) {
-      throw new NotFoundException(`Board with ID ${boardId} not found`);
+      throw new NotFoundException(`Board with ID ${id} not found`);
     }
 
     return board;
@@ -60,7 +61,8 @@ export class BoardsService {
     });
   }
 
-  async update(id: number, data: UpdateBoardInput) {
+  async update(data: UpdateBoardInput) {
+    const { boardId: id } = data;
     const board = await this.prisma.board.findUnique({
       where: { id },
     });
@@ -82,7 +84,8 @@ export class BoardsService {
     });
   }
 
-  async delete(id: number) {
+  async delete(data: BoardIdInput) {
+    const { boardId: id } = data;
     const board = await this.prisma.board.findUnique({ where: { id } });
     if (!board) {
       throw new NotFoundException(`Board with ID ${id} not found`);

@@ -1,7 +1,8 @@
 import { InputType, Field, Int } from '@nestjs/graphql';
+import { BoardIdInput } from 'src/boards/boards.input';
 
 @InputType()
-export class CreateCardInput {
+export class CreateCardInput extends BoardIdInput {
   @Field(() => String)
   title: string;
 
@@ -22,7 +23,7 @@ export class CreateCardInput {
 }
 
 @InputType()
-export class UpdateCardInput {
+export class UpdateCardInput extends BoardIdInput {
   @Field(() => Int)
   id: number;
 
@@ -43,4 +44,16 @@ export class UpdateCardInput {
 
   @Field(() => Date, { nullable: true })
   dueDate?: Date;
+}
+
+@InputType()
+export class GetCardsInput extends BoardIdInput {
+  @Field(() => Int)
+  listId: number;
+}
+
+@InputType()
+export class DeleteCardInput extends BoardIdInput {
+  @Field(() => Int)
+  id: number;
 }

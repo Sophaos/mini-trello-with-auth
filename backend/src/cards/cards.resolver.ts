@@ -1,7 +1,12 @@
-import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CardsService } from './cards.service';
 import { CardType } from 'src/types/card.type';
-import { CreateCardInput, UpdateCardInput } from './cards.input';
+import {
+  CreateCardInput,
+  DeleteCardInput,
+  GetCardsInput,
+  UpdateCardInput,
+} from './cards.input';
 import { BoardRoleGuard } from 'src/guards/board-role.guard';
 import { UseGuards } from '@nestjs/common';
 import { BoardRoles } from 'src/auth/decorators/roles.decorator';
@@ -14,8 +19,8 @@ export class CardsResolver {
 
   @BoardRoles(BoardRole.OWNER, BoardRole.MEMBER, BoardRole.GUEST)
   @Query(() => [CardType])
-  async getCardsByListId(@Args('listId', { type: () => Int }) listId: number) {
-    return await this.cardsService.findByListId(listId);
+  async getCardsByListId(@Args('data') data: GetCardsInput) {
+    return await this.cardsService.findByListId(data);
   }
 
   @BoardRoles(BoardRole.OWNER, BoardRole.MEMBER)
@@ -32,8 +37,8 @@ export class CardsResolver {
 
   @BoardRoles(BoardRole.OWNER, BoardRole.MEMBER)
   @Mutation(() => Boolean)
-  async deleteCard(@Args('id', { type: () => Int }) id: number) {
-    await this.cardsService.delete(id);
+  async deleteCard(@Args('data') data: DeleteCardInput) {
+    await this.cardsService.delete(data);
     return true;
   }
 }
