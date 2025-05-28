@@ -41,6 +41,29 @@ export class AuthService {
     return refreshToken;
   }
 
+  async refreshAccessToken(refreshToken: string): Promise<AuthTokens> {
+    if (!refreshToken) {
+      throw new UnauthorizedException('Refresh token not found');
+    }
+
+    try {
+      const payload = await this.jwtService.verifyAsync(refreshToken);
+
+      const newAccessToken = await this.jwtService.signAsync(
+        {
+          sub: payload.sub,
+          email: payload.email,
+        },
+        { expiresIn: '15m' },
+      );
+
+      return { accessToken: newAccessToken };
+    } catch (err) {
+      console.error(err);
+      throw new UnauthorizedException('Invalid refresh token');
+    }
+  }
+
   async login(loginDTO: LoginDTO): Promise<AuthTokens> {
     const { email, id } = loginDTO;
     const payload = { email, sub: id };
