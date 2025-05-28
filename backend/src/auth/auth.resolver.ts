@@ -34,9 +34,16 @@ export class AuthResolver {
       email: context.req.user.email,
       name: context.req.user.name,
     });
+    context.res.cookie('refreshToken', tokenData.refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      path: '/', // or '/graphql' if needed
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    });
     return {
       user: context.req.user,
-      ...tokenData,
+      accessToken: tokenData.accessToken,
     };
   }
 }

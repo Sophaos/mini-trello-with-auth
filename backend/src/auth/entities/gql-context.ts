@@ -1,4 +1,4 @@
-import { Request } from 'express';
+import { Request, Response } from 'express';
 
 export interface GqlContext {
   req: Request & {
@@ -8,4 +8,5 @@ export interface GqlContext {
       name: string;
     };
   };
+  res: Response;
 }

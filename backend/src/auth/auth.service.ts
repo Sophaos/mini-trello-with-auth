@@ -27,16 +27,26 @@ export class AuthService {
     throw new UnauthorizedException();
   }
 
+  async createAccessToken(payload: { email: string; sub: number }) {
+    const accessToken = await this.jwtService.signAsync(payload, {
+      expiresIn: '15m',
+    });
+    return accessToken;
+  }
+
+  async createRefreshToken(payload: { email: string; sub: number }) {
+    const refreshToken = await this.jwtService.signAsync(payload, {
+      expiresIn: '7d',
+    });
+    return refreshToken;
+  }
+
   async login(loginDTO: LoginDTO): Promise<AuthTokens> {
     const { email, id } = loginDTO;
     const payload = { email, sub: id };
 
-    const accessToken = await this.jwtService.signAsync(payload, {
-      expiresIn: '15m',
-    });
-    const refreshToken = await this.jwtService.signAsync(payload, {
-      expiresIn: '7d',
-    });
+    const accessToken = await this.createAccessToken(payload);
+    const refreshToken = await this.createAccessToken(payload);
 
     return {
       accessToken: accessToken,
