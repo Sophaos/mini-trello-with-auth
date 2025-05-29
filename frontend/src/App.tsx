@@ -1,5 +1,9 @@
 import { BrowserRouter, Navigate, Outlet, Route, Routes } from "react-router";
-import { BaseLayout } from "./layout/base-layout";
+// import { BaseLayout } from "./layout/base-layout";
+import { LoginPage } from "./pages/login-page";
+import { SignUpPage } from "./pages/sign-up-page";
+import { BoardsPage } from "./pages/boards-page";
+import { BoardPage } from "./pages/board-pages";
 
 function App() {
   return (
@@ -10,9 +14,9 @@ function App() {
           <Route path="/signup" element={<SignUpPage />} />
           <Route
             element={
-              <BaseLayout>
-                <Outlet />
-              </BaseLayout>
+              // <BaseLayout>
+              <Outlet />
+              // </BaseLayout>
             }
           >
             <Route index path="boards" element={<BoardsPage />} />
