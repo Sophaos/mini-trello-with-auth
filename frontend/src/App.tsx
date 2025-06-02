@@ -20,7 +20,7 @@ function App() {
             }
           >
             <Route index path="boards" element={<BoardsPage />} />
-            <Route path="board/:id" element={<BoardPage />} />
+            <Route path="boards/:id" element={<BoardPage />} />
           </Route>
           <Route path="*" element={<Navigate to="/boards" />} />
         </Routes>
