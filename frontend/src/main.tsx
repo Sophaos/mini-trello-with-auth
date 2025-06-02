@@ -1,13 +1,21 @@
 import { Provider } from "@/components/ui/provider";
+import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.tsx";
 
+const client = new ApolloClient({
+  uri: "http://localhost:3000/",
+  cache: new InMemoryCache(),
+});
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <Provider>
-      <App />
-    </Provider>
+    <ApolloProvider client={client}>
+      <Provider>
+        <App />
+      </Provider>
+    </ApolloProvider>
   </StrictMode>
 );
