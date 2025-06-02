@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { Box, Heading, VStack, Text, Stack, Input, Button, IconButton } from "@chakra-ui/react";
+import { Box, Heading, Stack } from "@chakra-ui/react";
 import { DragDropContext, Droppable, Draggable, type DropResult } from "@hello-pangea/dnd";
 import { useColorModeValue } from "@/components/ui/color-mode";
-import { IoMdClose } from "react-icons/io";
-import { AddList } from "@/components/add-list";
+import { AddList } from "@/components/board/add-list";
+import { BoardCardList } from "@/components/board/board-card-list";
 
 type Card = {
   id: string;
@@ -112,69 +112,25 @@ export const BoardPage = () => {
         <Droppable droppableId="board" direction="horizontal" type="list">
           {(provided) => (
             <Stack direction="row" ref={provided.innerRef} {...provided.droppableProps} align="flex-start">
-              {lists.map((list, listIndex) => (
-                <Draggable key={list.id} draggableId={list.id} index={listIndex}>
+              {lists.map((list, index) => (
+                <Draggable draggableId={list.id} index={index} key={list.id}>
                   {(provided) => (
-                    <Box
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      minW="250px"
-                      bg={bgColor}
-                      key={list.id}
-                      p={4}
-                      borderRadius="lg"
-                      boxShadow="md"
-                      display="flex"
-                      flexDirection="column"
-                      justifyContent="space-between"
-                    >
-                      <Text fontWeight="bold" mb={2}>
-                        {list.title}
-                      </Text>
-                      <Droppable droppableId={list.id}>
-                        {(provided) => (
-                          <VStack ref={provided.innerRef} {...provided.droppableProps} align="stretch" minH="100px">
-                            {list.cards.map((card, index) => (
-                              <Draggable key={card.id} draggableId={card.id} index={index}>
-                                {(provided, snapshot) => (
-                                  <Box ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} p={3} borderRadius="md" boxShadow={snapshot.isDragging ? "xl" : "sm"}>
-                                    {card.content}
-                                  </Box>
-                                )}
-                              </Draggable>
-                            ))}
-                            {provided.placeholder}
-
-                            {addingCardTo === list.id ? (
-                              <Box w="full">
-                                <Input size="sm" placeholder="Enter card title" value={newCardText} onChange={(e) => setNewCardText(e.target.value)} mb={2} />
-                                <Stack direction="row">
-                                  <Button size="sm" colorScheme="teal" onClick={() => handleAddCard(list.id)}>
-                                    Add Card
-                                  </Button>
-                                  <IconButton
-                                    size="sm"
-                                    variant={"ghost"}
-                                    aria-label="Cancel"
-                                    onClick={() => {
-                                      setAddingCardTo(null);
-                                      setNewCardText("");
-                                    }}
-                                  >
-                                    <IoMdClose />
-                                  </IconButton>
-                                </Stack>
-                              </Box>
-                            ) : (
-                              <Button size="sm" variant="ghost" onClick={() => setAddingCardTo(list.id)} alignSelf="flex-start" mt={2}>
-                                Add a card
-                              </Button>
-                            )}
-                          </VStack>
-                        )}
-                      </Droppable>
-                    </Box>
+                    <BoardCardList
+                      listId={list.id}
+                      title={list.title}
+                      cards={list.cards}
+                      bgColor={bgColor}
+                      isAddingCard={addingCardTo === list.id}
+                      newCardText={newCardText}
+                      setNewCardText={setNewCardText}
+                      onAddCard={handleAddCard}
+                      onStartAdding={setAddingCardTo}
+                      onCancelAdding={() => {
+                        setAddingCardTo(null);
+                        setNewCardText("");
+                      }}
+                      provided={provided}
+                    />
                   )}
                 </Draggable>
               ))}

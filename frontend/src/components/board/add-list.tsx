@@ -1,6 +1,6 @@
 import { Box, Button, IconButton, Input, Stack } from "@chakra-ui/react";
 import { IoMdClose } from "react-icons/io";
-import { useColorModeValue } from "./ui/color-mode";
+import { useColorModeValue } from "../ui/color-mode";
 
 interface AddListProps {
   addingList: boolean;
