@@ -10,6 +10,7 @@ import {
 } from './dto/auth.dto';
 import { toUserType } from 'src/mappers/user.mapper';
 import { UserType } from 'src/types/user.type';
+import { JwtPayload } from './dto/jwt-payload';
 
 @Injectable()
 export class AuthService {
@@ -41,13 +42,14 @@ export class AuthService {
     return refreshToken;
   }
 
-  async refreshAccessToken(refreshToken: string): Promise<AuthTokens> {
+  async refreshAccessToken(refreshToken: string): Promise<string> {
     if (!refreshToken) {
       throw new UnauthorizedException('Refresh token not found');
     }
 
     try {
-      const payload = await this.jwtService.verifyAsync(refreshToken);
+      const payload =
+        await this.jwtService.verifyAsync<JwtPayload>(refreshToken);
 
       const newAccessToken = await this.jwtService.signAsync(
         {
@@ -57,7 +59,7 @@ export class AuthService {
         { expiresIn: '15m' },
       );
 
-      return { accessToken: newAccessToken };
+      return newAccessToken;
     } catch (err) {
       console.error(err);
       throw new UnauthorizedException('Invalid refresh token');

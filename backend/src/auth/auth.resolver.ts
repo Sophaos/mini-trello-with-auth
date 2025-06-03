@@ -1,7 +1,7 @@
 // src/auth/auth.resolver.ts
 import { Resolver, Mutation, Args, Query, Context } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
-import { UseGuards } from '@nestjs/common';
+import { UnauthorizedException, UseGuards } from '@nestjs/common';
 import { LoginInput, SignUpInput } from './entities/auth.input';
 import { GqlLocalAuthGuard } from './guards/gql-local.guard';
 import { UserAuthType } from 'src/types/user-auth.type';
@@ -23,6 +23,32 @@ export class AuthResolver {
   @Mutation(() => UserType)
   async signUp(@Args('data') data: SignUpInput) {
     return await this.authService.signUp(data);
+  }
+
+  @Public()
+  @Mutation(() => Boolean)
+  logout(@Context() context: GqlContext): boolean {
+    context.res.clearCookie('refreshToken', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      path: '/', // must match the path used when setting the cookie
+    });
+
+    return true;
+  }
+
+  @Public()
+  @Mutation(() => String)
+  async refreshAccessToken(@Context() context: GqlContext) {
+    const cookies = context.req.cookies as Record<string, string>;
+    const refreshToken = cookies?.refreshToken;
+
+    if (!refreshToken) {
+      throw new UnauthorizedException('Refresh token not found');
+    }
+
+    return await this.authService.refreshAccessToken(refreshToken);
   }
 
   @Public()
