@@ -80,11 +80,10 @@ export class AuthService {
   }
 
   async signUp(signUpDTO: SignUpDTO): Promise<UserType> {
-    const { email, name, password } = signUpDTO;
+    const { email, password } = signUpDTO;
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await this.usersService.create({
       email,
-      name,
       password: hashedPassword,
     });
 

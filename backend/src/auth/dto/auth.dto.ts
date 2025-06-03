@@ -5,13 +5,11 @@ export interface ValidateUserDTO {
 
 export interface LoginDTO {
   email: string;
-  name: string;
   id: number;
 }
 
 export interface SignUpDTO {
   email: string;
-  name: string;
   password: string;
 }
 

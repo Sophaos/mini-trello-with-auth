@@ -6,7 +6,6 @@ export interface GqlContext {
     user: {
       id: number;
       email: string;
-      name: string;
     };
   };
   res: Response;

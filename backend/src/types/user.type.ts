@@ -7,7 +7,4 @@ export class UserType {
 
   @Field(() => String)
   email: string;
-
-  @Field(() => String)
-  name: string;
 }

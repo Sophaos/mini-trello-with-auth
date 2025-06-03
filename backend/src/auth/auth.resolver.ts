@@ -58,7 +58,6 @@ export class AuthResolver {
     const tokenData = await this.authService.login({
       id: context.req.user.id,
       email: context.req.user.email,
-      name: context.req.user.name,
     });
     context.res.cookie('refreshToken', tokenData.refreshToken, {
       httpOnly: true,

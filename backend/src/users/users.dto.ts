@@ -5,5 +5,4 @@ export interface FindOneUserDTO {
 export interface CreateUserDTO {
   email: string;
   password: string;
-  name: string;
 }

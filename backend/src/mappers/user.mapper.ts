@@ -5,6 +5,5 @@ export function toUserType(item: User): UserType {
   return {
     id: item.id,
     email: item.email,
-    name: item.name,
   };
 }
