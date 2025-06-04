@@ -1,4 +1,4 @@
-import { getAccessToken } from "@/apollo/links";
+import { getAccessToken, fetchNewAccessToken } from "@/apollo/links";
 import { type ReactNode, useEffect, useState } from "react";
 import { Navigate } from "react-router";
 
@@ -11,9 +11,16 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const [hasAccessToken, setHasAccessToken] = useState(false);
 
   useEffect(() => {
-    const token = getAccessToken();
-    setHasAccessToken(!!token);
-    setLoading(false);
+    const tryRestoreSession = async () => {
+      let token = getAccessToken();
+      if (!token) {
+        token = await fetchNewAccessToken(); // refresh using cookie
+      }
+      setHasAccessToken(!!token);
+      setLoading(false);
+    };
+
+    tryRestoreSession();
   }, []);
 
   if (loading) return <div>Loading...</div>;

@@ -25,6 +25,10 @@ import { PrismaService } from './prisma/prisma.service';
       driver: ApolloDriver,
       autoSchemaFile: true,
       sortSchema: true,
+      context: ({ req, res }: { req: Request; res: Response }) => ({
+        req,
+        res,
+      }),
     }),
     BoardsModule,
     ListsModule,

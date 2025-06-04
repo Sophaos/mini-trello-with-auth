@@ -71,7 +71,7 @@ export class AuthService {
     const payload = { email, sub: id };
 
     const accessToken = await this.createAccessToken(payload);
-    const refreshToken = await this.createAccessToken(payload);
+    const refreshToken = await this.createRefreshToken(payload);
 
     return {
       accessToken: accessToken,

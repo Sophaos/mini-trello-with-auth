@@ -2,7 +2,7 @@
 import { LOGIN_MUTATION, SIGN_UP_MUTATION } from "@/graphql/auth/auth-mutations";
 import { ME_QUERY } from "@/graphql/auth/auth-queries";
 import { useMutation, useQuery } from "@apollo/client";
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { AuthContext, type User } from "./auth-provider";
 import { setAccessToken } from "@/apollo/links";
 
@@ -15,6 +15,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const [loginMutation] = useMutation(LOGIN_MUTATION);
   const [signUpMutation] = useMutation(SIGN_UP_MUTATION);
+
+  useEffect(() => {
+    refetch(); // ME_QUERY — triggers refresh if needed
+  }, [refetch]);
 
   const signIn = async (email: string, password: string) => {
     const { data } = await loginMutation({

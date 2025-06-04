@@ -11,9 +11,9 @@ export function getAccessToken() {
   return accessToken;
 }
 
-async function fetchNewAccessToken(): Promise<string | null> {
+export async function fetchNewAccessToken(): Promise<string | null> {
   try {
-    const response = await fetch("/graphql", {
+    const response = await fetch("http://localhost:3000/graphql", {
       method: "POST",
       credentials: "include",
       headers: {
@@ -27,7 +27,6 @@ async function fetchNewAccessToken(): Promise<string | null> {
           `,
       }),
     });
-
     const json = await response.json();
     const newToken = json?.data?.refreshAccessToken;
     accessToken = newToken;
