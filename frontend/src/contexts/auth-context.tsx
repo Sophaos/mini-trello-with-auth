@@ -1,58 +1,51 @@
-// import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
-// import { createContext, useEffect, useState } from "react";
-// import { toast } from "react-toastify";
-// import { handleError } from "@/error/error-handler";
+// src/features/auth/auth-provider.tsx
+import { LOGIN_MUTATION, SIGN_UP_MUTATION } from "@/graphql/auth/auth-mutations";
+import { ME_QUERY } from "@/graphql/auth/auth-queries";
+import { useMutation, useQuery } from "@apollo/client";
+import { useState, type ReactNode } from "react";
+import { AuthContext, type User } from "./auth-provider";
+import { setAccessToken } from "@/apollo/links";
 
-// export const AuthContext = createContext(null);
-// export const AuthProvider = ({ children }) => {
-//   const [user, setUser] = useState(null);
-//   const [loading, setLoading] = useState(true);
-//   const signUp = (email, password) => {
-//     setLoading(true);
-//     return createUserWithEmailAndPassword(auth, email, password)
-//       .then((userCredential) => {
-//         return userCredential;
-//       })
-//       .catch((error) => {
-//         handleError(error);
-//         toast.error(`An error occurred: ${error.message}`);
-//         throw error;
-//       });
-//   };
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const [user, setUser] = useState<User | null>(null);
+  const { loading, refetch } = useQuery<{ me: User }>(ME_QUERY, {
+    onCompleted: (data) => setUser(data.me),
+    onError: () => setUser(null),
+  });
 
-//   const login = async (email, password) => {
-//     setLoading(true);
-//     try {
-//       await signInWithEmailAndPassword(auth, email, password);
-//     } catch (error) {
-//       handleError(error);
-//       toast.error(`An error occurred: ${error.message}`);
-//       setLoading(false);
-//     }
-//   };
+  const [loginMutation] = useMutation(LOGIN_MUTATION);
+  const [signUpMutation] = useMutation(SIGN_UP_MUTATION);
 
-//   const logout = () => {
-//     setLoading(true);
-//     return signOut(auth);
-//   };
+  const signIn = async (email: string, password: string) => {
+    const { data } = await loginMutation({
+      variables: { data: { email, password } },
+    });
+    if (data?.login) {
+      setAccessToken(data.login.accessToken);
+      setUser(data.login.user);
+    }
+  };
 
-//   useEffect(() => {
-//     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-//       setUser(currentUser);
-//       setLoading(false);
-//     });
-//     return () => {
-//       unsubscribe();
-//     };
-//   }, []);
+  const signUp = async (email: string, password: string) => {
+    const { data } = await signUpMutation({
+      variables: { data: { email, password } },
+    });
+    if (data?.signUp) {
+      await signIn(email, password);
+    }
+  };
 
-//   const authValue = {
-//     signUp,
-//     login,
-//     logout,
-//     loading,
-//     user,
-//   };
+  const logout = async () => {
+    await fetch("/graphql", {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query: `mutation { logout }` }),
+    });
+    setAccessToken(null);
+    setUser(null);
+    await refetch();
+  };
 
-//   return <AuthContext.Provider value={authValue}>{children}</AuthContext.Provider>;
-// };
+  return <AuthContext.Provider value={{ user, loading, signIn, signUp, logout, refetch }}>{children}</AuthContext.Provider>;
+};

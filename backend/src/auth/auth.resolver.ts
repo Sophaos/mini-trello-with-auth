@@ -1,4 +1,3 @@
-// src/auth/auth.resolver.ts
 import { Resolver, Mutation, Args, Query, Context } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
 import { UnauthorizedException, UseGuards } from '@nestjs/common';
@@ -19,6 +18,13 @@ export class AuthResolver {
     return 'API is running!';
   }
 
+  @Query(() => UserType)
+  me(@Context() context: GqlContext): UserType {
+    const user = context.req.user;
+    if (!user) throw new UnauthorizedException();
+    return user;
+  }
+
   @Public()
   @Mutation(() => UserType)
   async signUp(@Args('data') data: SignUpInput) {
@@ -32,7 +38,7 @@ export class AuthResolver {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
-      path: '/', // must match the path used when setting the cookie
+      path: '/',
     });
 
     return true;
