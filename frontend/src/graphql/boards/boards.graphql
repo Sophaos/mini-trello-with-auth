@@ -1,0 +1,58 @@
+# src/graphql/boards.graphql
+
+# Create Board mutation
+mutation CreateBoard($data: CreateBoardInput!) {
+  createBoard(data: $data) {
+    id
+    title
+    ownerId
+  }
+}
+
+# Get Board by ID query
+query GetBoardById($data: BoardIdInput!) {
+  board(data: $data) {
+    id
+    title
+    ownerId
+    owner {
+      id
+      email
+    }
+    members {
+      id
+      role
+      user {
+        id
+        email
+      }
+    }
+    lists {
+      id
+      title
+    }
+    createdAt
+    updatedAt
+  }
+}
+
+# Update Board mutation
+mutation UpdateBoard($data: UpdateBoardInput!) {
+  updateBoard(data: $data) {
+    id
+    title
+  }
+}
+
+# Delete Board mutation
+mutation DeleteBoard($data: BoardIdInput!) {
+  deleteBoard(data: $data)
+}
+
+# Transfer Ownership mutation
+mutation TransferOwnership($data: TransferOwnershipInput!) {
+  transferOwnership(data: $data) {
+    id
+    ownerId
+  }
+}

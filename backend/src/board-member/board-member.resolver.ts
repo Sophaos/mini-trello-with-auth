@@ -5,8 +5,13 @@ import {
   CreateBoardMemberInput,
   UpdateBoardMemberInput,
 } from './board-member.input';
+import { BoardRole } from '@prisma/client';
+import { BoardRoles } from 'src/auth/decorators/roles.decorator';
+import { BoardRoleGuard } from 'src/guards/board-role.guard';
+import { UseGuards } from '@nestjs/common';
 
 @Resolver(() => BoardMemberType)
+@UseGuards(BoardRoleGuard)
 export class BoardMemberResolver {
   constructor(private readonly boardMemberService: BoardMemberService) {}
 
@@ -15,6 +20,7 @@ export class BoardMemberResolver {
     return this.boardMemberService.findByBoardId(boardId);
   }
 
+  @BoardRoles(BoardRole.OWNER)
   @Mutation(() => BoardMemberType)
   async addBoardMember(@Args('data') data: CreateBoardMemberInput) {
     return this.boardMemberService.create(data);
@@ -25,6 +31,7 @@ export class BoardMemberResolver {
     return this.boardMemberService.update(data);
   }
 
+  @BoardRoles(BoardRole.OWNER)
   @Mutation(() => Boolean)
   async removeBoardMember(
     @Args('userId', { type: () => Int }) userId: number,

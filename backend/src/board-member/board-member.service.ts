@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateBoardMemberInput } from './board-member.input';
 import { UpdateBoardMemberInput } from './board-member.input';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -18,11 +22,32 @@ export class BoardMemberService {
   }
 
   async create(data: CreateBoardMemberInput) {
-    return this.prisma.boardMember.create({
+    const { userId, boardId, role } = data;
+    const existing = await this.prisma.boardMember.findUnique({
+      where: {
+        userId_boardId: {
+          userId,
+          boardId,
+        },
+      },
+    });
+
+    if (existing) throw new ConflictException('User is already a board member');
+
+    await this.prisma.boardMember.create({
       data: {
-        userId: data.userId,
-        boardId: data.boardId,
-        role: data.role ?? 'MEMBER',
+        boardId,
+        userId,
+        role,
+      },
+    });
+
+    return this.prisma.board.findUnique({
+      where: { id: boardId },
+      include: {
+        members: true,
+        owner: true,
+        lists: true,
       },
     });
   }

@@ -20,13 +20,6 @@ import { UserType } from 'src/types/user.type';
 export class BoardsResolver {
   constructor(private readonly boardsService: BoardsService) {}
 
-  // TODO: ADMIN ?!?
-  // @BoardRoles(BoardRole.MEMBER, BoardRole.GUEST)
-  // @Query(() => [BoardType])
-  // async getAllBoards() {
-  //   return await this.boardsService.findAll();
-  // }
-
   @Mutation(() => BoardType)
   async createBoard(
     @Args('data') data: CreateBoardInput,
@@ -52,16 +45,6 @@ export class BoardsResolver {
   async deleteBoard(@Args('data') data: BoardIdInput) {
     await this.boardsService.delete(data);
     return true;
-  }
-
-  @BoardRoles(BoardRole.OWNER, BoardRole.MEMBER)
-  @Mutation(() => BoardType)
-  async addBoardMember(@Args('data') data: AddBoardMemberInput) {
-    return await this.boardsService.addMember(
-      data.boardId,
-      data.userId,
-      data.role,
-    );
   }
 
   @BoardRoles(BoardRole.OWNER)

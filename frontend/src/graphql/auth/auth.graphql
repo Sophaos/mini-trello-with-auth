@@ -1,0 +1,43 @@
+# src/graphql/auth.graphql
+
+# Login mutation
+mutation Login($data: LoginInput!) {
+  login(data: $data) {
+    accessToken
+    user {
+      id
+      email
+    }
+  }
+}
+
+# Sign Up mutation
+mutation SignUp($data: SignUpInput!) {
+  signUp(data: $data) {
+    id
+    email
+  }
+}
+
+# Logout mutation
+mutation Logout {
+  logout
+}
+
+# Refresh Access Token mutation
+mutation RefreshAccessToken {
+  refreshAccessToken
+}
+
+# Health Check query
+query HealthCheck {
+  healthCheck
+}
+
+# Me query - get current user info
+query Me {
+  me {
+    id
+    email
+  }
+}
