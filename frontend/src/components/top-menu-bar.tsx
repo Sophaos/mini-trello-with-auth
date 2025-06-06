@@ -1,8 +1,10 @@
-import React from "react";
-import { AvatarIcon, Box, Button, Flex, HStack, IconButton, Spacer, Text } from "@chakra-ui/react";
+import { Avatar, Box, Button, Flex, HStack, IconButton, Menu, Portal, Spacer, Text } from "@chakra-ui/react";
 import { useColorModeValue } from "./ui/color-mode";
+import { useContext } from "react";
+import { AuthContext } from "@/contexts/auth-provider";
 
 export const TopMenuBar = () => {
+  const { logout } = useContext(AuthContext);
   return (
     <Box bg={useColorModeValue("gray.100", "gray.900")} px={4} py={2} borderBottom="1px solid" borderColor={useColorModeValue("gray.300", "gray.700")} position="sticky" top={0} zIndex={10}>
       <Flex align="center">
@@ -30,7 +32,24 @@ export const TopMenuBar = () => {
             variant="ghost"
             size="sm"
           />
-          <AvatarIcon name="Jane Doe" />
+          <Menu.Root>
+            <Menu.Trigger asChild>
+              <IconButton variant="ghost">
+                <Avatar.Root>
+                  <Avatar.Fallback name="Segun Adebayo" />
+                </Avatar.Root>
+              </IconButton>
+            </Menu.Trigger>
+            <Portal>
+              <Menu.Positioner>
+                <Menu.Content>
+                  <Menu.Item value="delete-card" onClick={() => logout()}>
+                    Logout
+                  </Menu.Item>
+                </Menu.Content>
+              </Menu.Positioner>
+            </Portal>
+          </Menu.Root>
         </HStack>
       </Flex>
     </Box>

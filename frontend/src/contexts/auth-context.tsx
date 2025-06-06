@@ -1,7 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { AuthContext, type User } from "./auth-provider";
 import { setAccessToken } from "@/apollo/links";
-import { useLoginMutation, useMeQuery, useSignUpMutation } from "@/gql/graphql";
+import { useLoginMutation, useLogoutMutation, useMeQuery, useSignUpMutation } from "@/gql/graphql";
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -12,6 +12,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const [loginMutation] = useLoginMutation();
   const [signUpMutation] = useSignUpMutation(); // { data, loading: signUpLoading, error }
+  const [logoutMutation] = useLogoutMutation();
 
   useEffect(() => {
     refetch();
@@ -37,12 +38,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const logout = async () => {
-    await fetch("/graphql", {
-      method: "POST",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query: `mutation { logout }` }),
-    });
+    await logoutMutation();
     setAccessToken(null);
     setUser(null);
     await refetch();

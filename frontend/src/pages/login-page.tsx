@@ -48,7 +48,7 @@ export const LoginPage = () => {
 
           <HStack justify="center" pt={2} spaceX={4}>
             <Text fontSize="sm">Don’t have an account?</Text>
-            <Button variant="outline" colorScheme="teal" size="sm">
+            <Button variant="outline" colorScheme="teal" size="sm" onClick={() => navigate("/signup")}>
               Sign up!
             </Button>
           </HStack>
