@@ -2,7 +2,6 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { BoardsService } from './boards.service';
 import { BoardType } from 'src/types/board.type';
 import {
-  AddBoardMemberInput,
   BoardIdInput,
   CreateBoardInput,
   TransferOwnershipInput,

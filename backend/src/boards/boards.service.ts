@@ -7,16 +7,6 @@ import { BoardRole } from '@prisma/client';
 export class BoardsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  // async findAll() {
-  //   return this.prisma.board.findMany({
-  //     include: {
-  //       owner: true,
-  //       members: true,
-  //       lists: true,
-  //     },
-  //   });
-  // }
-
   async findByBoardId(data: BoardIdInput) {
     const { boardId: id } = data;
     const board = await this.prisma.board.findUnique({
