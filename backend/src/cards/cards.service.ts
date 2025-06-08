@@ -4,6 +4,7 @@ import {
   CreateCardInput,
   DeleteCardInput,
   GetCardsInput,
+  MoveCardInput,
   UpdateCardInput,
 } from './cards.input';
 
@@ -72,5 +73,70 @@ export class CardsService {
     if (!card) throw new NotFoundException(`Card with ID ${id} not found`);
 
     return this.prisma.card.delete({ where: { id } });
+  }
+
+  async moveCardPosition(data: MoveCardInput) {
+    const { id, newPosition } = data;
+    const card = await this.prisma.card.findUnique({ where: { id } });
+
+    if (!card) throw new NotFoundException(`Card with ID ${id} not found`);
+
+    const currentPosition = card.position;
+    const listId = card.listId;
+
+    if (currentPosition === newPosition) {
+      return this.prisma.card.findMany({
+        where: { listId },
+        orderBy: { position: 'asc' },
+        include: { assignees: true, list: true },
+      });
+    }
+
+    const direction = newPosition > currentPosition ? 'down' : 'up';
+
+    return await this.prisma.$transaction(async (tx) => {
+      if (direction === 'down') {
+        await tx.card.updateMany({
+          where: {
+            listId,
+            position: {
+              gt: currentPosition,
+              lte: newPosition,
+            },
+          },
+          data: {
+            position: {
+              decrement: 1,
+            },
+          },
+        });
+      } else {
+        await tx.card.updateMany({
+          where: {
+            listId,
+            position: {
+              gte: newPosition,
+              lt: currentPosition,
+            },
+          },
+          data: {
+            position: {
+              increment: 1,
+            },
+          },
+        });
+      }
+
+      await tx.card.update({
+        where: { id },
+        data: { position: newPosition },
+      });
+
+      return tx.card.findMany({
+        where: { listId },
+        orderBy: { position: 'asc' },
+        include: { assignees: true, list: true },
+      });
+    });
   }
 }

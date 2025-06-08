@@ -5,6 +5,7 @@ import {
   CreateCardInput,
   DeleteCardInput,
   GetCardsInput,
+  MoveCardInput,
   UpdateCardInput,
 } from './cards.input';
 import { BoardRoleGuard } from 'src/guards/board-role.guard';
@@ -40,5 +41,10 @@ export class CardsResolver {
   async deleteCard(@Args('data') data: DeleteCardInput) {
     await this.cardsService.delete(data);
     return true;
+  }
+
+  @Mutation(() => [CardType])
+  async moveCard(@Args('data') data: MoveCardInput) {
+    return this.cardsService.moveCardPosition(data);
   }
 }

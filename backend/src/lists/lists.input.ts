@@ -2,6 +2,11 @@ import { InputType, Field, Int } from '@nestjs/graphql';
 import { BoardIdInput } from 'src/boards/boards.input';
 
 @InputType()
+export class FindListByIdInput extends BoardIdInput {
+  @Field(() => Int)
+  id: number;
+}
+@InputType()
 export class CreateListInput extends BoardIdInput {
   @Field(() => String)
   title: string;
@@ -26,4 +31,13 @@ export class UpdateListInput extends BoardIdInput {
 export class DeleteListInput extends BoardIdInput {
   @Field(() => Int)
   id: number;
+}
+
+@InputType()
+export class MoveListInput extends BoardIdInput {
+  @Field(() => Int)
+  id: number;
+
+  @Field(() => Int)
+  newPosition: number;
 }

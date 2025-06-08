@@ -57,3 +57,12 @@ export class DeleteCardInput extends BoardIdInput {
   @Field(() => Int)
   id: number;
 }
+
+@InputType()
+export class MoveCardInput extends BoardIdInput {
+  @Field(() => Int)
+  id: number;
+
+  @Field(() => Int)
+  newPosition: number;
+}
