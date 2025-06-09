@@ -1,6 +1,3 @@
-# src/graphql/auth.graphql
-
-# Login mutation
 mutation Login($data: LoginInput!) {
   login(data: $data) {
     accessToken
@@ -11,7 +8,6 @@ mutation Login($data: LoginInput!) {
   }
 }
 
-# Sign Up mutation
 mutation SignUp($data: SignUpInput!) {
   signUp(data: $data) {
     id
@@ -19,22 +15,18 @@ mutation SignUp($data: SignUpInput!) {
   }
 }
 
-# Logout mutation
 mutation Logout {
   logout
 }
 
-# Refresh Access Token mutation
 mutation RefreshAccessToken {
   refreshAccessToken
 }
 
-# Health Check query
 query HealthCheck {
   healthCheck
 }
 
-# Me query - get current user info
 query Me {
   me {
     id

@@ -1,0 +1,46 @@
+mutation CreateList($data: CreateListInput!) {
+  createList(data: $data) {
+    id
+    title
+    position
+    boardId
+    cards {
+      id
+      title
+    }
+  }
+}
+
+mutation CreateList($data: CreateListInput!) {
+  createList(data: $data) {
+    id
+    title
+    position
+    boardId
+    cards {
+      id
+      title
+    }
+  }
+}
+
+mutation UpdateList($data: UpdateListInput!) {
+  updateList(data: $data) {
+    id
+    title
+    position
+  }
+}
+
+mutation DeleteList($data: DeleteListInput!) {
+  deleteList(data: $data)
+}
+
+mutation MoveList($data: MoveListInput!) {
+  moveList(data: $data) {
+    id
+    title
+    position
+    boardId
+  }
+}

@@ -1,0 +1,45 @@
+query GetBoardMembers($boardId: Int!) {
+  getBoardMembers(boardId: $boardId) {
+    id
+    userId
+    boardId
+    role
+    joinedAt
+    user {
+      id
+      email
+    }
+    board {
+      id
+      title
+    }
+  }
+}
+
+mutation AddBoardMember($data: CreateBoardMemberInput!) {
+  addBoardMember(data: $data) {
+    id
+    userId
+    boardId
+    role
+    joinedAt
+    user {
+      id
+      email
+    }
+  }
+}
+
+mutation UpdateBoardMember($data: UpdateBoardMemberInput!) {
+  updateBoardMember(data: $data) {
+    id
+    userId
+    boardId
+    role
+    joinedAt
+  }
+}
+
+mutation RemoveBoardMember($userId: Int!, $boardId: Int!) {
+  removeBoardMember(userId: $userId, boardId: $boardId)
+}
